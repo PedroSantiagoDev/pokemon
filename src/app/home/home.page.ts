@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {PokemonService} from "../api/pokemon.service";
 
 @Component({
   selector: 'app-home',
@@ -7,6 +8,11 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+  constructor(public pokemonService: PokemonService) {
+  }
+
+  ngOnInit() {
+    this.pokemonService.getPokemon();
+  }
 
 }
