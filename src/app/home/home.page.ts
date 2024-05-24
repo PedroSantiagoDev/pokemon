@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {PokemonService} from "../api/pokemon.service";
+import {Pokemon, PokemonService} from "../api/pokemon.service";
 
 @Component({
   selector: 'app-home',
@@ -7,16 +7,30 @@ import {PokemonService} from "../api/pokemon.service";
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
+  private offset: number = 0;
+  private limit: number = 12;
+  public pokemons: Pokemon[] = [];
 
-  constructor(public pokemonService: PokemonService) {
+  constructor(private pokemonService: PokemonService) {
   }
 
   ngOnInit() {
-    this.pokemonService.loadPokemons();
+    this.loadPokemons();
   }
 
-  addPokemonToList(event: any) {
-    this.pokemonService.loadData(event);
+  public loadPokemons(event?: any) {
+    this.pokemonService.getPokemon(this.offset, this.limit).subscribe((pokemonsList: Pokemon[]) => {
+      this.pokemons = [...this.pokemons, ...pokemonsList];
+
+      if (event) {
+        event.target.complete();
+      }
+    });
+  }
+
+  public loadData(event: any) {
+    this.offset += this.limit;
+    this.loadPokemons(event);
   }
 
 }
