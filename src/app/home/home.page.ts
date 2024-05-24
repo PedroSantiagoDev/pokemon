@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PokemonService} from "../api/pokemon.service";
 
 @Component({
@@ -6,13 +6,17 @@ import {PokemonService} from "../api/pokemon.service";
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
   constructor(public pokemonService: PokemonService) {
   }
 
   ngOnInit() {
-    this.pokemonService.getPokemon();
+    this.pokemonService.loadPokemons();
+  }
+
+  addPokemonToList(event: any) {
+    this.pokemonService.loadData(event);
   }
 
 }

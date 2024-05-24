@@ -7,18 +7,36 @@ import {from, map, mergeMap, toArray} from "rxjs";
 })
 export class PokemonService {
   private baseUrl: string = 'https://pokeapi.co/api/v2/';
+  private offset: number = 0;
+  private limit: number = 12;
   public pokemons: Pokemon[] = [];
 
   constructor(private httpClient: HttpClient) {
   }
 
-  public getPokemon(offset: number = 0, limit: number = 12) {
+  public loadPokemons(event?: any) {
+    this.getPokemon().subscribe((pokemonsList: Pokemon[]) => {
+      this.pokemons = [...this.pokemons, ...pokemonsList];
+
+      if (event) {
+        event.target.complete();
+      }
+    });
+  }
+
+  public loadData(event: any) {
+    this.offset += this.limit;
+    this.loadPokemons(event);
+  }
+
+  private getPokemon(offset: number = this.offset, limit: number = this.limit) {
     return this.httpClient.get<unknown>(`${this.baseUrl}/pokemon?offset=${offset}&limit=${limit}`).pipe(
       map((res: any) => res.results),
       mergeMap((pokemonSummaries: any[]) => from(pokemonSummaries)),
       mergeMap(pokemonSummary => this.httpClient.get(pokemonSummary.url)),
       map(pokemon => this.TransformPokemonData(pokemon)),
-    ).subscribe((result: Pokemon) => this.pokemons.push(result));
+      toArray()
+    );
   }
 
   private TransformPokemonData(pokemon: any): Pokemon {
