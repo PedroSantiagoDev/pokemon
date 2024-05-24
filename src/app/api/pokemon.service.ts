@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {from, map, mergeMap, Observable, Subject, toArray} from "rxjs";
+import {from, map, mergeMap, Observable, of, Subject, toArray} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PokemonService {
   private baseUrl: string = 'https://pokeapi.co/api/v2/';
+  private favoritesKey: string = 'favoritePokemons';
 
   constructor(private httpClient: HttpClient) {
   }
@@ -21,10 +22,29 @@ export class PokemonService {
     );
   }
 
-  public getPokemonDetails(id: number) {
+  public getPokemonDetails(id: number): Observable<PokemonDetails> {
     return this.httpClient.get<unknown>(`${this.baseUrl}/pokemon/${id}`).pipe(
       map(pokemon => this.transformPokemonDataDetails(pokemon))
     );
+  }
+
+  public getFavorites(): Observable<Pokemon[]> {
+    const favorites = JSON.parse(localStorage.getItem(this.favoritesKey) || '[]');
+    return of(favorites);
+  }
+
+  public addFavorite(pokemon: Pokemon): void {
+    const favorites = JSON.parse(localStorage.getItem(this.favoritesKey) || '[]');
+    if (!favorites.find((res: Pokemon) => res.id === pokemon.id)) {
+      favorites.push(pokemon);
+      localStorage.setItem(this.favoritesKey, JSON.stringify(favorites));
+    }
+  }
+
+  public removeFavorite(pokemon: Pokemon): void {
+    let favorites = JSON.parse(localStorage.getItem(this.favoritesKey) || '[]');
+    favorites = favorites.filter((res: Pokemon) => res.id !== pokemon.id);
+    localStorage.setItem(this.favoritesKey, JSON.stringify(favorites));
   }
 
   private transformPokemonData(pokemon: any): Pokemon {

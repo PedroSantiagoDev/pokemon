@@ -33,4 +33,7 @@ export class HomePage implements OnInit {
     this.loadPokemons(event);
   }
 
+  public addFavorite(pokemon: Pokemon) {
+    this.pokemonService.addFavorite(pokemon);
+  }
 }
