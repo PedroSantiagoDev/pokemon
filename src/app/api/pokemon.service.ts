@@ -29,8 +29,7 @@ export class PokemonService {
 
   private transformPokemonData(pokemon: any): Pokemon {
     return {
-      image: pokemon.sprites.front_default,
-      id: pokemon.id,
+      id: pokemon.id, image: pokemon.sprites.front_default,
       name: pokemon.name,
       types: pokemon.types.map((t: any) => t.type.name)
     };
@@ -38,7 +37,7 @@ export class PokemonService {
 
   private transformPokemonDataDetails(pokemon: any): PokemonDetails {
     return {
-      id: pokemon.id,
+      id: pokemon.id, image: pokemon.sprites.front_default,
       name: pokemon.name,
       base_experience: pokemon.base_experience,
       height: pokemon.height,
@@ -53,14 +52,15 @@ export class PokemonService {
 }
 
 export interface Pokemon {
-  image: string;
   id: string;
+  image: string;
   name: string;
   types: string[];
 }
 
 export interface PokemonDetails {
   id: number;
+  image: string;
   name: string;
   base_experience: number;
   height: number;
