@@ -13,12 +13,16 @@ export class DetailsPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private pokemonService: PokemonService
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
+    this.pokemonDetails();
+  }
+
+  pokemonDetails() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.pokemonService.getPokemonDetails(id).subscribe((pokemonDetail) => {
-      console.log(pokemonDetail); // Adicione este console.log para verificar os dados
       this.pokemon = pokemonDetail;
     });
   }

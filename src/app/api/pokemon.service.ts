@@ -1,45 +1,33 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {from, map, mergeMap, toArray} from "rxjs";
+import {from, map, mergeMap, Observable, Subject, toArray} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PokemonService {
   private baseUrl: string = 'https://pokeapi.co/api/v2/';
-  private offset: number = 0;
-  private limit: number = 12;
-  public pokemons: Pokemon[] = [];
 
   constructor(private httpClient: HttpClient) {
   }
 
-  public loadPokemons(event?: any) {
-    this.getPokemon().subscribe((pokemonsList: Pokemon[]) => {
-      this.pokemons = [...this.pokemons, ...pokemonsList];
-
-      if (event) {
-        event.target.complete();
-      }
-    });
-  }
-
-  public loadData(event: any) {
-    this.offset += this.limit;
-    this.loadPokemons(event);
-  }
-
-  private getPokemon(offset: number = this.offset, limit: number = this.limit) {
-    return this.httpClient.get<unknown>(`${this.baseUrl}/pokemon?offset=${offset}&limit=${limit}`).pipe(
-      map((res: any) => res.results),
-      mergeMap((pokemonSummaries: any[]) => from(pokemonSummaries)),
-      mergeMap(pokemonSummary => this.httpClient.get(pokemonSummary.url)),
-      map(pokemon => this.TransformPokemonData(pokemon)),
+  public getPokemon(offset: number, limit: number): Observable<Pokemon[]> {
+    return this.httpClient.get<PokemonResponse>(`${this.baseUrl}/pokemon?offset=${offset}&limit=${limit}`).pipe(
+      map((res: PokemonResponse) => res.results),
+      mergeMap((pokemonSummaries: PokemonSummary[]) => from(pokemonSummaries)),
+      mergeMap((pokemonSummary: PokemonSummary) => this.httpClient.get(pokemonSummary.url)),
+      map(pokemon => this.transformPokemonData(pokemon)),
       toArray()
     );
   }
 
-  private TransformPokemonData(pokemon: any): Pokemon {
+  public getPokemonDetails(id: number) {
+    return this.httpClient.get<unknown>(`${this.baseUrl}/pokemon/${id}`).pipe(
+      map(pokemon => this.transformPokemonDataDetails(pokemon))
+    );
+  }
+
+  private transformPokemonData(pokemon: any): Pokemon {
     return {
       image: pokemon.sprites.front_default,
       id: pokemon.id,
@@ -47,11 +35,48 @@ export class PokemonService {
       types: pokemon.types.map((t: any) => t.type.name)
     };
   }
+
+  private transformPokemonDataDetails(pokemon: any): PokemonDetails {
+    return {
+      id: pokemon.id,
+      name: pokemon.name,
+      base_experience: pokemon.base_experience,
+      height: pokemon.height,
+      weight: pokemon.weight,
+      abilities: pokemon.abilities.map((a: any) => a.ability.name),
+      sprites: pokemon.sprites.front_default,
+      stats: pokemon.stats.map((s: any) => `${s.stat.name}: ${s.base_stat}`),
+      types: pokemon.types.map((t: any) => t.type.name),
+      species: pokemon.species.name
+    };
+  }
 }
 
 export interface Pokemon {
   image: string;
-  id: number;
+  id: string;
   name: string;
   types: string[];
+}
+
+export interface PokemonDetails {
+  id: number;
+  name: string;
+  base_experience: number;
+  height: number;
+  weight: number;
+  abilities: string[];
+  sprites: string;
+  stats: string[];
+  types: string[];
+  species: string[];
+}
+
+interface PokemonResponse {
+  results: PokemonSummary[];
+}
+
+interface PokemonSummary {
+  name: string;
+  url: string;
 }
