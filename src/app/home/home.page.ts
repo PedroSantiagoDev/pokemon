@@ -36,4 +36,8 @@ export class HomePage implements OnInit {
   public addFavorite(pokemon: Pokemon) {
     this.pokemonService.addFavorite(pokemon);
   }
+
+  public formatNumber(num: string): string {
+    return `#${String(num).padStart(4, '0')}`;
+  }
 }

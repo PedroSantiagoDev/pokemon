@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>favorites</ion-title>
+    <ion-title>Pokemons Favoritos</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,14 +10,17 @@
       <ion-title size="large">favorites</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <ion-content>
+  <ion-button routerLink="/home">
+    Inicial
+    <ion-icon name="home">
+    </ion-icon>
+  </ion-button>
     <ion-list>
       <ion-item *ngFor="let pokemon of favorites">
         <ion-thumbnail slot="start">
           <img [src]="pokemon.image" alt="Imagem de {{ pokemon.name }}">
         </ion-thumbnail>
-        <ion-label>
+        <ion-label [routerLink]="pokemon.id">
           <h2>{{ pokemon.name }}</h2>
           <p>#{{ pokemon.id }}</p>
           <p>{{ pokemon.types.join(', ') }}</p>
@@ -27,5 +30,4 @@
         </ion-button>
       </ion-item>
     </ion-list>
-  </ion-content>
 </ion-content>

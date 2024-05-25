@@ -14,24 +14,30 @@
   </ion-header>
 
   <ion-grid *ngIf="pokemons">
+    <ion-button routerLink="/favorites">
+      Favoritos
+      <ion-icon name="heart">
+      </ion-icon>
+    </ion-button>
     <ion-row>
-      <ion-button [routerLink]="['/favorites']">
-        Favoritos
-      </ion-button>
       <ion-col size="12" size-md="6" size-lg="4" *ngFor="let pokemon of pokemons">
-        <ion-card [routerLink]="pokemon.id">
+        <ion-card>
           <img [src]="pokemon.image" alt="{{ pokemon.name }}"/>
-          <ion-card-header>
+          <ion-card-header [routerLink]="pokemon.id">
+            <ion-card-subtitle>{{ formatNumber(pokemon.id) }}</ion-card-subtitle>
             <ion-card-title>{{ pokemon.name | titlecase }}</ion-card-title>
-            <ion-card-subtitle>#{{ pokemon.id }}</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
-            {{ pokemon.types.join(' ') }}
-
+            <ion-chip *ngFor="let type of pokemon.types">
+              {{ type }}
+            </ion-chip>
           </ion-card-content>
-
+          <ion-button (click)="addFavorite(pokemon)">
+            <ion-icon name="heart">
+            </ion-icon>
+          </ion-button>
         </ion-card>
-        <ion-button (click)="addFavorite(pokemon)">Favoritar</ion-button>
+
       </ion-col>
 
     </ion-row>
