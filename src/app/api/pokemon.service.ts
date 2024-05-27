@@ -33,6 +33,12 @@ export class PokemonService {
     return of(favorites);
   }
 
+  public searchPokemon(value: string): Observable<Pokemon> {
+    return this.httpClient.get(`${this.baseUrl}/pokemon/${value.toLowerCase()}`).pipe(
+      map(pokemon => this.transformPokemonData(pokemon))
+    );
+  }
+
   public addFavorite(pokemon: Pokemon): void {
     const favorites = JSON.parse(localStorage.getItem(this.favoritesKey) || '[]');
     if (!favorites.find((res: Pokemon) => res.id === pokemon.id)) {

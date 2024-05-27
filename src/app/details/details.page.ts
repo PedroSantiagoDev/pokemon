@@ -26,4 +26,8 @@ export class DetailsPage implements OnInit {
       this.pokemon = pokemonDetail;
     });
   }
+
+  public formatNumber(num: number | undefined): string {
+    return `#${String(num).padStart(4, '0')}`;
+  }
 }

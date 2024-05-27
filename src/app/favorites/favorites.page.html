@@ -17,13 +17,13 @@
   </ion-button>
     <ion-list>
       <ion-item *ngFor="let pokemon of favorites">
-        <ion-thumbnail slot="start">
+        <ion-thumbnail slot="start" [routerLink]="pokemon.id">
           <img [src]="pokemon.image" alt="Imagem de {{ pokemon.name }}">
         </ion-thumbnail>
         <ion-label [routerLink]="pokemon.id">
           <h2>{{ pokemon.name }}</h2>
-          <p>#{{ pokemon.id }}</p>
-          <p>{{ pokemon.types.join(', ') }}</p>
+          <p>{{ formatNumber(pokemon.id) }}</p>
+          <p>{{ pokemon.types.join(' ') }}</p>
         </ion-label>
         <ion-button slot="end" color="danger" (click)="removeFavorite(pokemon)">
           Remover

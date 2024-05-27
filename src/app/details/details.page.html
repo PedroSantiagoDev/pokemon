@@ -17,7 +17,7 @@
   <ion-card>
     <img [src]="pokemon?.image" alt="{{ pokemon?.name }}"/>
     <ion-card-header>
-      <ion-card-title class="ion-text-capitalize">#{{ pokemon?.id }} {{ pokemon?.name }}
+      <ion-card-title class="ion-text-capitalize">{{ formatNumber(pokemon?.id) }} {{ pokemon?.name }}
         <ion-chip color="primary" *ngFor="let type of pokemon?.types">
           <ion-label>{{ type }}</ion-label>
         </ion-chip>

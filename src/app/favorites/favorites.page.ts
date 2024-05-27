@@ -24,4 +24,8 @@ export class FavoritesPage implements OnInit {
     this.pokemonService.removeFavorite(pokemon);
     this.loadFavorites();
   }
+
+  public formatNumber(num: string): string {
+    return `#${String(num).padStart(4, '0')}`;
+  }
 }

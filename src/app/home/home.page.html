@@ -11,27 +11,32 @@
     <ion-toolbar>
       <ion-title size="large">Pokédex</ion-title>
     </ion-toolbar>
+    <ion-toolbar>
+      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="searchPokemon()" placeholder="Pesquisar Pokémon"></ion-searchbar>
+    </ion-toolbar>
   </ion-header>
 
-  <ion-grid *ngIf="pokemons">
+  <ion-grid *ngIf="filteredPokemons.length">
     <ion-button routerLink="/favorites">
       Favoritos
       <ion-icon name="heart">
       </ion-icon>
     </ion-button>
     <ion-row>
-      <ion-col size="12" size-md="6" size-lg="4" *ngFor="let pokemon of pokemons">
+      <ion-col size="12" size-md="6" size-lg="4" *ngFor="let pokemon of filteredPokemons">
         <ion-card>
-          <img [src]="pokemon.image" alt="{{ pokemon.name }}"/>
-          <ion-card-header [routerLink]="pokemon.id">
-            <ion-card-subtitle>{{ formatNumber(pokemon.id) }}</ion-card-subtitle>
-            <ion-card-title>{{ pokemon.name | titlecase }}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-chip *ngFor="let type of pokemon.types">
-              {{ type }}
-            </ion-chip>
-          </ion-card-content>
+          <div [routerLink]="pokemon.id">
+            <img [src]="pokemon.image" alt="{{ pokemon.name }}"/>
+            <ion-card-header>
+              <ion-card-subtitle>{{ formatNumber(pokemon.id) }}</ion-card-subtitle>
+              <ion-card-title>{{ pokemon.name | titlecase }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-chip *ngFor="let type of pokemon.types">
+                {{ type }}
+              </ion-chip>
+            </ion-card-content>
+          </div>
           <ion-button (click)="addFavorite(pokemon)">
             <ion-icon name="heart">
             </ion-icon>
@@ -43,7 +48,7 @@
     </ion-row>
   </ion-grid>
 
-  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content
       loadingSpinner="bubbles"
       loadingText="Carregando Pokémons...">
