@@ -2,9 +2,11 @@
 
 Este projeto é uma Pokédex, desenvolvida usando Ionic e Angular, que permite visualizar, pesquisar e favoritar Pokémon. A aplicação busca dados da PokeAPI e os exibe de maneira organizada e interativa.
 
-![Pokédex Home](./public/home-list.jpeg)
-![Pokédex Search](./public/search.jpeg)
-![Pokédex Favorites](./public/favorites.jpeg)
+<div>
+  <img src="./public/home-list.jpeg" alt="Pokédex Home" width="300">
+  <img src="./public/search.jpeg" alt="Pokédex Search" width="300">
+  <img src="./public/favorites.jpeg" alt="Pokédex Favorites" width="300">
+</div>
 
 ## Abordagem Utilizada
 
