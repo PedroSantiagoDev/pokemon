@@ -4,6 +4,9 @@
       Pokédex
     </ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="searchPokemon()" placeholder="Pesquisar Pokémon"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
